@@ -106,7 +106,8 @@ def main():
     scat_matches = []
 
     for n in args.swap_counts:
-        mid = 11  # middle of TinyLlama's 22 layers
+        num_layers = llm.apply_model(lambda m: len(m.model.layers))
+        mid = num_layers // 2
         block = list(range(mid - n // 2, mid - n // 2 + n))
         # scattered indices from LIS ranking on TinyLlama
         scattered = [5, 10, 11, 17, 4, 12, 9, 19, 3, 8, 13][:n]

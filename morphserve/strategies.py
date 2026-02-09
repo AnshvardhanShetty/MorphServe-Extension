@@ -13,8 +13,10 @@ def compute_perplexity(model, input_ids):
 
 @contextmanager
 def swap_layers(model_fp16, model_int4, indices):
-    """Swap layers to INT4 and restore on exit. Uses in-place copy so
-    memory addresses stay the same (matters for CUDA graph compat).
+    """Swap layer references to INT4 and restore on exit.
+    Note: this is a module-level swap (replaces the layer object), not an
+    in-place weight copy. For actual in-place .copy_() that preserves memory
+    addresses (needed for CUDA graph compat), see vllm_morphing_demo.py.
     Prevents the forgetting-to-restore bug that kept happening in the notebook."""
     originals = {}
     for idx in indices:
@@ -35,7 +37,7 @@ def test_ordering(ordering, n_swap, model_fp16, model_int4, input_ids):
 
 def greedy_lis_order(model_fp16, model_int4, inputs, lts_scores, lrs_scores):
     """Greedy LIS: swap one layer at a time, recomputing MDS after each.
-    Expensive (O(n^2) forward passes) but gives the best possible ordering."""
+    Expensive but gives the best possible ordering."""
     num_layers = len(model_fp16.model.layers)
     greedy_order = []
     remaining = list(range(num_layers))
@@ -46,16 +48,17 @@ def greedy_lis_order(model_fp16, model_int4, inputs, lts_scores, lrs_scores):
         best_layer = None
         best_score = -1
 
+        # baseline for this step (same for all candidates)
+        with swap_layers(model_fp16, model_int4, list(current_swapped)):
+            out_without = model_fp16(**inputs, output_hidden_states=True)
+            final_without = out_without.hidden_states[-1].squeeze(0).float()
+
         for candidate in remaining:
             test_set = current_swapped | {candidate}
 
             with swap_layers(model_fp16, model_int4, list(test_set)):
                 out_with = model_fp16(**inputs, output_hidden_states=True)
                 final_with = out_with.hidden_states[-1].squeeze(0).float()
-
-            with swap_layers(model_fp16, model_int4, list(current_swapped)):
-                out_without = model_fp16(**inputs, output_hidden_states=True)
-                final_without = out_without.hidden_states[-1].squeeze(0).float()
 
             mds = F.cosine_similarity(final_without, final_with, dim=-1).mean().item()
             lis = 0.25 * lts_scores[candidate] + 0.25 * lrs_scores[candidate] + 0.5 * mds

@@ -8,6 +8,8 @@ import sys
 import numpy as np
 import torch
 
+torch.manual_seed(42)
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from morphserve.models import load_fp16_model

@@ -4,11 +4,6 @@ import torch
 import torch.nn.functional as F
 
 
-def cosine_sim(a, b):
-    a = a.float().flatten(1)
-    b = b.float().flatten(1)
-    return F.cosine_similarity(a, b, dim=-1).mean().item()
-
 
 def compute_lts_scores(model, inputs):
     """Run forward pass, capture per-layer input/output similarity.
