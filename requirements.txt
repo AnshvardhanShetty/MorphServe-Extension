@@ -5,4 +5,5 @@ autoawq
 datasets
 matplotlib
 numpy
-vllm>=0.6.6
+# vllm only needed for vllm_morphing_demo.py (won't install on Colab, use RunPod)
+# vllm>=0.6.6

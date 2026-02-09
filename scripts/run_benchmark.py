@@ -35,10 +35,11 @@ def main():
 
     model_fp16, _, num_layers = load_fp16_model(args.fp16_model)
 
+    # use a middle layer as reference for compute simulation
     ref_weight = model_fp16.model.layers[10].self_attn.q_proj.weight.data
     compute_fn = lambda: simulate_inference(ref_weight)
 
-    # pinned buffer for swap sim
+    # pinned buffer for swap sim (same layer)
     layer = model_fp16.model.layers[10]
     flat = torch.cat([p.data.flatten() for p in layer.parameters()])
     host_pinned = torch.empty_like(flat, device="cpu", pin_memory=True)

@@ -64,7 +64,7 @@ def main():
         greedy_order = lis_ranking
         greedy_ppls = None
 
-    # comparison table
+    # comparison table (11 = half of TinyLlama's 22 layers, 22 = all)
     swap_counts = [1, 2, 4, 8, 11, 16, 22]
     print(f"\n{'N':<8}{'LIS':<12}{'FtB':<12}{'BtF':<12}")
     print("-" * 44)

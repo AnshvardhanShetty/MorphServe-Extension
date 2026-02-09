@@ -107,6 +107,8 @@ def main():
     mid = num_layers // 2
     # from run_sensitivity.py -- LIS ranking for TinyLlama (safest first)
     lis_ranking = [5, 10, 11, 17, 4, 12, 9, 19, 3, 8, 13, 6, 7, 18, 20, 2, 15, 14, 16, 1, 21, 0]
+    assert num_layers == len(lis_ranking), \
+        f"lis_ranking is for 22-layer TinyLlama but model has {num_layers} layers"
 
     block_matches = []
     scat_matches = []
