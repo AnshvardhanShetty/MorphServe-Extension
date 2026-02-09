@@ -103,15 +103,16 @@ def main():
     print("Generating FP16 baseline...")
     baseline = llm.generate(prompts, params)
 
+    num_layers = llm.apply_model(lambda m: len(m.model.layers))
+    mid = num_layers // 2
+    # from run_sensitivity.py -- LIS ranking for TinyLlama (safest first)
+    lis_ranking = [5, 10, 11, 17, 4, 12, 9, 19, 3, 8, 13, 6, 7, 18, 20, 2, 15, 14, 16, 1, 21, 0]
+
     block_matches = []
     scat_matches = []
 
     for n in args.swap_counts:
-        num_layers = llm.apply_model(lambda m: len(m.model.layers))
-        mid = num_layers // 2
         block = list(range(mid - n // 2, mid - n // 2 + n))
-        # from run_sensitivity.py -- LIS ranking for TinyLlama (safest first)
-        lis_ranking = [5, 10, 11, 17, 4, 12, 9, 19, 3, 8, 13, 6, 7, 18, 20, 2, 15, 14, 16, 1, 21, 0]
         scattered = lis_ranking[:n]
 
         llm.apply_model(lambda m, b=block: swap_layers(m, b))

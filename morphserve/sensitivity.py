@@ -4,7 +4,6 @@ import torch
 import torch.nn.functional as F
 
 
-
 def compute_lts_scores(model, inputs):
     """Run forward pass, capture per-layer input/output similarity.
     Higher LTS = layer transforms less = safer to swap."""

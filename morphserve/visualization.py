@@ -226,33 +226,3 @@ def plot_burst_results(results, save_path=None):
     plt.savefig(save_path, dpi=150, bbox_inches="tight")
     plt.close()
     print(f"Saved {save_path}")
-
-
-def plot_vllm_morphing(block_matches, scat_matches, swap_counts, save_path=None):
-    if save_path is None:
-        _ensure_dir()
-        save_path = os.path.join(FIGURES_DIR, "vllm_morphing_results.png")
-    else:
-        _ensure_dir(save_path)
-
-    fig, ax = plt.subplots(figsize=(10, 6))
-    x = np.arange(len(swap_counts))
-    w = 0.35
-    ax.bar(x - w / 2, block_matches, w, color="#4CAF50", label="Contiguous Block (middle)")
-    ax.bar(x + w / 2, scat_matches, w, color="#E91E63", label="Scattered (LIS-style)")
-    ax.set_xlabel("Layers Swapped to Quantized", fontsize=13)
-    ax.set_ylabel("Token Match vs FP16 Baseline (%)", fontsize=13)
-    ax.set_title("vLLM Runtime Layer Morphing: Block vs Scattered", fontsize=15, fontweight="bold")
-    ax.set_xticks(x)
-    ax.set_xticklabels(swap_counts)
-    ax.legend(fontsize=12)
-    ax.grid(True, axis="y", alpha=0.3)
-    for i in range(len(swap_counts)):
-        ax.text(x[i] - w / 2, block_matches[i] + 0.5,
-                f"{block_matches[i]:.1f}%", ha="center", fontsize=10)
-        ax.text(x[i] + w / 2, scat_matches[i] + 0.5,
-                f"{scat_matches[i]:.1f}%", ha="center", fontsize=10)
-    plt.tight_layout()
-    plt.savefig(save_path, dpi=150)
-    plt.close()
-    print(f"Saved {save_path}")
