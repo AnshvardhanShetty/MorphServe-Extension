@@ -41,7 +41,7 @@ python vllm_morphing_demo.py
 - Block transfer is faster than scattered: single packed H2D copy vs multiple small ones, with ~3x less jitter
 - Dual-stream overlap hides swap behind compute with ~1.4% overhead
 
-## Caveats
+## Important Notes
 
 - `vllm_morphing_demo.py` measures output quality only (token match), not latency. Uses fake quantization (symmetric min-max) to keep tensors in FP16 for in-place `.copy_()`. The CUDA transfer numbers in the slides come from `morphserve/benchmark.py` which runs on raw HuggingFace models, not inside vLLM.
 - The burst simulation (`morphserve/simulation.py`) uses fixed delay penalties as a stand-in for memory pressure, not actual KV cache modeling. Forward pass timings are real though.

@@ -13,8 +13,9 @@ def compute_perplexity(model, input_ids):
 
 @contextmanager
 def swap_layers(model_fp16, model_int4, indices):
-    """Swap layers to INT4 and restore on exit. Prevents the
-    forgetting-to-restore bug that kept happening in the notebook."""
+    """Swap layers to INT4 and restore on exit. Uses in-place copy so
+    memory addresses stay the same (matters for CUDA graph compat).
+    Prevents the forgetting-to-restore bug that kept happening in the notebook."""
     originals = {}
     for idx in indices:
         originals[idx] = model_fp16.model.layers[idx]
