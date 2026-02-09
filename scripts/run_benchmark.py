@@ -28,6 +28,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--fp16-model", default="TinyLlama/TinyLlama-1.1B-Chat-v1.0")
     parser.add_argument("--n-iter", type=int, default=50)
+    # different indices but same count -- all TinyLlama layers are same size
     parser.add_argument("--scattered-layers", type=int, nargs="+", default=[5, 10, 11, 17])
     parser.add_argument("--block-layers", type=int, nargs="+", default=[8, 9, 10, 11])
     args = parser.parse_args()

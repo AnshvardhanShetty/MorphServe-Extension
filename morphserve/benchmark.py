@@ -62,7 +62,9 @@ def benchmark_overlap(compute_fn, swap_fn, n_iter=50):
 
 
 def benchmark_scattered_vs_block(model, scattered_indices, block_indices, n_iter=50):
-    """Compare N separate H2D copies (scattered) vs 1 packed copy (block)."""
+    """Compare N separate H2D copies (scattered) vs 1 packed copy (block).
+    Both use the same number of layers (all TinyLlama layers are identical
+    size anyway, so total bytes is the same either way)."""
     swap_stream = torch.cuda.Stream()
 
     # scattered: one buffer per layer

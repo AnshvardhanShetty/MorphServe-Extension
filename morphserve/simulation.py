@@ -65,6 +65,7 @@ class MinimalServingSimulator:
                              decode_steps=20, swap_at_burst=True,
                              scattered_indices=None, block_indices=None):
         """Simulate quiet -> burst -> recovery traffic pattern."""
+        # defaults for TinyLlama -- scattered are top-4 from LIS, block is middle
         if scattered_indices is None:
             scattered_indices = [5, 10, 11, 17]
         if block_indices is None:

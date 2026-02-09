@@ -43,7 +43,7 @@ def compute_lrs_scores(model_fp16, model_int4, inputs, fp16_layer_outputs):
     int4_layer_outputs = {}
     hooks = []
 
-    # INT4 model has an extra .model wrapper
+    # AWQ model has an extra .model wrapper so it's .model.model.layers
     for i, layer in enumerate(model_int4.model.model.layers):
         def save_out(mod, inp, out, idx=i):
             int4_layer_outputs[idx] = out[0].detach()

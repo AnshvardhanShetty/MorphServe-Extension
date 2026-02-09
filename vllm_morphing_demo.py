@@ -23,6 +23,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 
+# needed for apply_model() to work -- vllm complains about pickle otherwise
 os.environ["VLLM_ALLOW_INSECURE_SERIALIZATION"] = "1"
 
 from vllm import LLM, SamplingParams
@@ -109,8 +110,9 @@ def main():
         num_layers = llm.apply_model(lambda m: len(m.model.layers))
         mid = num_layers // 2
         block = list(range(mid - n // 2, mid - n // 2 + n))
-        # scattered indices from LIS ranking on TinyLlama
-        scattered = [5, 10, 11, 17, 4, 12, 9, 19, 3, 8, 13][:n]
+        # from run_sensitivity.py -- LIS ranking for TinyLlama (safest first)
+        lis_ranking = [5, 10, 11, 17, 4, 12, 9, 19, 3, 8, 13, 6, 7, 18, 20, 2, 15, 14, 16, 1, 21, 0]
+        scattered = lis_ranking[:n]
 
         llm.apply_model(lambda m, b=block: swap_layers(m, b))
         bout = llm.generate(prompts, params)
