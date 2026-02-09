@@ -135,10 +135,16 @@ def main():
             [2, 4, 8, 11])
 
         print(f"\n{'N':<8}{'Block':<12}{'LIS':<12}{'FtB':<12}")
+        wins, total = 0, 0
         for n in [2, 4, 8, 11]:
             print(f"{n:<8}{np.mean(results['block'][n]):<12.4f}"
                   f"{np.mean(results['lis'][n]):<12.4f}"
                   f"{np.mean(results['ftb'][n]):<12.4f}")
+            for i in range(len(results['block'][n])):
+                total += 1
+                if results['block'][n][i] <= results['lis'][n][i]:
+                    wins += 1
+        print(f"\nBlock wins {wins}/{total} comparisons vs LIS ({100*wins/total:.0f}%)")
 
 
 if __name__ == "__main__":

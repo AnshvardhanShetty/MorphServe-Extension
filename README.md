@@ -37,7 +37,7 @@ python vllm_morphing_demo.py
 ## Results summary
 
 - Middle layers (roughly 4-14 in TinyLlama) are consistently safest to swap across LTS, LRS, and MDS
-- Best contiguous block consistently matches or beats greedy LIS across 10 held-out texts x 4 swap counts
+- Best contiguous block wins 90% of comparisons (36/40) against greedy LIS across 10 texts x 4 swap counts (see `run_strategies.py` validation output)
 - Block transfer is faster than scattered: single packed H2D copy vs multiple small ones, with ~3x less jitter
 - Dual-stream overlap hides swap behind compute with ~1.4% overhead
 
