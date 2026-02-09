@@ -16,7 +16,7 @@ Extension of Juncheng Yang's [MorphServe](https://arxiv.org/abs/2506.02006) work
 pip install -r requirements.txt
 ```
 
-Needs a CUDA GPU. Tested with Python 3.10, torch 2.1, vLLM 0.6.6.
+Needs a CUDA GPU. The `morphserve/` scripts and notebook run fine on Colab (tested with Python 3.10, torch 2.1). The vLLM demo (`vllm_morphing_demo.py`) has version conflicts on Colab -- I ran it on a RunPod instance with vLLM 0.6.6 instead.
 
 ## Running
 
