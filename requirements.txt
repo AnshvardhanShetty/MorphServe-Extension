@@ -1,0 +1,8 @@
+torch>=2.0
+transformers>=4.35
+accelerate
+autoawq
+datasets
+matplotlib
+numpy
+vllm>=0.6.6
